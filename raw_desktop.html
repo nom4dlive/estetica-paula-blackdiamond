@@ -1,0 +1,890 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Dra. Paula Feliciano — Black Diamond & Golden Aura</title>
+<!-- Google Fonts: Syne + Plus Jakarta Sans + Playfair Display -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "#020204",
+            "onyx": "#09090e",
+            "gold-light": "#FFF3B3",
+            "gold-metal": "#E8C15A",
+            "gold-deep": "#9E782F",
+            "crimson-neon": "#FF003C",
+            "crimson-dark": "#7A001C",
+            "surface-glass": "rgba(14, 15, 23, 0.75)"
+          },
+          fontFamily: {
+            "display": ["Syne", "sans-serif"],
+            "body": ["Plus Jakarta Sans", "sans-serif"],
+            "serif-italic": ["Playfair Display", "serif"]
+          }
+        }
+      }
+    }
+</script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-size: 22px;
+      line-height: 1;
+      display: inline-block;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Liquid Gold foil effect */
+    .gold-foil {
+      background: linear-gradient(135deg, #FFF6D1 0%, #E8C15A 30%, #B88928 60%, #FFE885 85%, #8C651E 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-foil-bg {
+      background: linear-gradient(135deg, #FFF6D1 0%, #E8C15A 30%, #B88928 60%, #FFE885 85%, #8C651E 100%);
+    }
+    .neon-crimson-border {
+      border: 1px solid rgba(255, 0, 60, 0.45);
+      box-shadow: 0 0 25px rgba(255, 0, 60, 0.25), inset 0 0 15px rgba(255, 0, 60, 0.1);
+    }
+    .diamond-card {
+      background: linear-gradient(180deg, rgba(16, 18, 28, 0.85) 0%, rgba(5, 6, 10, 0.95) 100%);
+      border: 1px solid rgba(232, 193, 90, 0.22);
+      backdrop-filter: blur(16px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .diamond-card:hover {
+      border-color: rgba(232, 193, 90, 0.6);
+      transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 25px rgba(232, 193, 90, 0.15);
+    }
+    .card-selected {
+      background: linear-gradient(180deg, rgba(32, 26, 14, 0.95) 0%, rgba(12, 10, 6, 0.98) 100%) !important;
+      border: 1.5px solid #E8C15A !important;
+      box-shadow: 0 0 35px rgba(232, 193, 90, 0.3), inset 0 0 15px rgba(255, 0, 60, 0.15) !important;
+    }
+    canvas { touch-action: none; }
+</style>
+</head>
+<body class="bg-[#020204] text-[#E2E2EA] font-body antialiased pb-28 selection:bg-crimson-neon selection:text-white">
+
+<!-- Top Bar -->
+<div class="border-b border-[#E8C15A]/25 bg-gradient-to-r from-black via-[#1a050d] via-black to-[#1a050d] px-4 py-2 text-xs font-semibold">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-crimson-neon animate-ping"></span>
+      <span class="bg-gradient-to-r from-crimson-neon to-crimson-dark text-white px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider">BLACK FRIDAY 2026</span>
+      <span class="text-white/90">Realização obrigatória em 2026 • Últimas vagas</span>
+    </div>
+    <div class="flex items-center gap-2 font-mono text-[11px] text-[#E8C15A] bg-black/60 px-3 py-0.5 rounded-full border border-[#E8C15A]/30">
+      <span class="material-symbols-outlined text-[15px] text-crimson-neon">schedule</span>
+      <span id="top-timer">Expira em 03d : 14h : 10m : 57s</span>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="sticky top-0 z-40 backdrop-blur-2xl bg-[#020204]/90 border-b border-[#E8C15A]/20">
+  <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3.5">
+      <div class="relative">
+        <div class="w-12 h-12 rounded-full p-[2px] bg-gradient-to-br from-[#E8C15A] via-crimson-neon to-[#8C651E] shadow-lg">
+          <img alt="Dra. Paula Feliciano" class="w-full h-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/ALJJyrBxurOmpWNl_qCFIKd-he-Z0pk9030bDOYr64-OrbOS9UsQHjRTgns41dwxdG1GQJ5GZv6cXCDWZ0WgUVC9VQcdx6b8RXZPeOzgWu3_zeGqxw1aglg_KDKHIWK-lr26Qs-zCA0jcYEgDemACRR32MQFnKFdh-QU30fUSksGVP5otTt0xj_Q0YtueMEckRsMpIjO1ulI4_3HVbxvXICL1K31IJ43Gk7WnbWytBz25zxj">
+        </div>
+        <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-black"></span>
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[#E8C15A] text-[16px]">spa</span>
+          <h1 class="font-display font-black text-sm sm:text-base tracking-wider text-white uppercase">DRA. PAULA FELICIANO</h1>
+        </div>
+        <p class="text-[11px] text-white/60 font-medium">Estética Avançada • Biomédica <span class="text-[#E8C15A] font-mono bg-[#E8C15A]/10 px-1 py-0.5 rounded border border-[#E8C15A]/30">CRBM/SP 38.291</span></p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <a class="hidden sm:inline-flex px-4 py-2 rounded-full border border-[#E8C15A]/40 text-[#E8C15A] hover:bg-[#E8C15A]/10 text-xs font-bold tracking-widest uppercase" href="#protocolos">Ver Protocolos</a>
+      <a class="inline-flex items-center gap-1.5 bg-[#10B981] hover:bg-emerald-600 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg shadow-emerald-950/60" href="https://wa.me/5511999999999" target="_blank">
+        <span class="material-symbols-outlined text-base">chat</span>
+        <span>WhatsApp VIP</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 pt-8 space-y-16">
+<!-- Hero Section -->
+<section class="relative rounded-3xl p-6 sm:p-10 lg:p-14 overflow-hidden border border-[#E8C15A]/30 bg-gradient-to-b from-[#0e101a] via-[#05060a] to-[#020204]">
+  <div class="absolute -top-40 -right-40 w-96 h-96 bg-crimson-neon/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-[#E8C15A]/10 rounded-full blur-3xl pointer-events-none"></div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+      <div class="inline-flex items-center gap-2 bg-[#170a10] border border-crimson-neon/40 px-3.5 py-1.5 rounded-full text-[11px] font-black text-[#FFF3B3] uppercase tracking-widest">
+        <span class="w-2 h-2 rounded-full bg-crimson-neon animate-pulse"></span>
+        CONDIÇÃO VIP EXCLUSIVA • 6 PROTOCOLOS SELECIONADOS
+      </div>
+      <h2 class="font-display font-black text-3xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
+        Sua melhor versão com as condições mais aguardadas do ano na <span class="font-serif-italic italic font-normal gold-foil">Estética Avançada</span>.
+      </h2>
+      <p class="text-white/70 text-sm sm:text-base leading-relaxed max-w-xl mx-auto lg:mx-0 font-normal">
+        Acesso prioritário a 6 protocolos VIP completos com equipamentos de alta tecnologia e substâncias de padrão ouro mundial. Vagas estritamente limitadas para atendimento personalizado.
+      </p>
+
+      <!-- Chronometer Display -->
+      <div class="pt-2">
+        <p class="text-xs uppercase tracking-widest text-[#E8C15A] font-bold mb-3 flex items-center justify-center lg:justify-start gap-1.5">
+          <span class="material-symbols-outlined text-sm text-crimson-neon">schedule</span> Tempo Restante da Campanha:
+        </p>
+        <div class="grid grid-cols-4 gap-3 max-w-md mx-auto lg:mx-0">
+          <div class="p-3.5 rounded-2xl bg-black/80 border border-[#E8C15A]/25 text-center shadow-lg">
+            <span class="text-3xl font-black font-mono text-white block" id="timer-days">03</span>
+            <span class="text-[10px] text-white/50 uppercase font-bold tracking-wider">Dias</span>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-black/80 border border-[#E8C15A]/25 text-center shadow-lg">
+            <span class="text-3xl font-black font-mono text-white block" id="timer-hours">14</span>
+            <span class="text-[10px] text-white/50 uppercase font-bold tracking-wider">Horas</span>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-black/80 border border-[#E8C15A]/25 text-center shadow-lg">
+            <span class="text-3xl font-black font-mono text-white block" id="timer-minutes">10</span>
+            <span class="text-[10px] text-white/50 uppercase font-bold tracking-wider">Min</span>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-black/80 border border-crimson-neon/60 text-center shadow-[0_0_20px_rgba(255,0,60,0.2)]">
+            <span class="text-3xl font-black font-mono text-crimson-neon block" id="timer-seconds">57</span>
+            <span class="text-[10px] text-crimson-neon uppercase font-bold tracking-wider">Seg</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 pt-3 justify-center lg:justify-start">
+        <a class="gold-foil-bg text-[#150f03] font-black text-sm sm:text-base py-4 px-8 rounded-2xl shadow-[0_0_30px_rgba(232,193,90,0.4)] hover:brightness-110 transition-all flex items-center justify-center gap-2 uppercase tracking-wider" href="#protocolos">
+          <span class="material-symbols-outlined text-xl">lock_open</span>
+          Garantir Condição VIP 2026
+        </a>
+        <a class="inline-flex items-center justify-center gap-2 bg-[#0c101a] hover:bg-[#141b2b] border border-[#E8C15A]/40 text-white font-bold text-sm py-4 px-6 rounded-2xl transition-all" href="#assinatura">
+          <span class="material-symbols-outlined text-lg text-[#E8C15A]">description</span>
+          Contrato Digital
+        </a>
+      </div>
+      <div class="flex items-center justify-center lg:justify-start gap-2 pt-1 text-xs text-white/60">
+        <span class="material-symbols-outlined text-[#E8C15A] text-base">verified</span>
+        <span>Realização exclusiva no ano de 2026 • Registro médico Biomédico</span>
+      </div>
+    </div>
+
+    <!-- Doctor Frame -->
+    <div class="lg:col-span-5 flex justify-center">
+      <div class="relative w-full max-w-sm rounded-3xl p-3 bg-gradient-to-b from-[#E8C15A]/40 via-crimson-neon/20 to-transparent border border-[#E8C15A]/40 shadow-2xl">
+        <div class="relative rounded-2xl overflow-hidden aspect-[3/4] bg-black">
+          <img alt="Dra. Paula Feliciano - Estética Avançada" class="w-full h-full object-cover object-top" src="https://lh3.googleusercontent.com/aida/ALJJyrBxurOmpWNl_qCFIKd-he-Z0pk9030bDOYr64-OrbOS9UsQHjRTgns41dwxdG1GQJ5GZv6cXCDWZ0WgUVC9VQcdx6b8RXZPeOzgWu3_zeGqxw1aglg_KDKHIWK-lr26Qs-zCA0jcYEgDemACRR32MQFnKFdh-QU30fUSksGVP5otTt0xj_Q0YtueMEckRsMpIjO1ulI4_3HVbxvXICL1K31IJ43Gk7WnbWytBz25zxj">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-85"></div>
+          <div class="absolute top-3 left-3 backdrop-blur-md bg-black/75 border border-[#E8C15A]/40 px-3 py-1.5 rounded-xl flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-crimson-neon animate-ping"></span>
+            <span class="text-[10px] font-black tracking-widest text-[#FFF3B3] uppercase">Vagas 2026 Abertas</span>
+          </div>
+          <div class="absolute bottom-3 inset-x-3 backdrop-blur-xl bg-black/85 border border-[#E8C15A]/40 p-3.5 rounded-2xl flex items-center justify-between">
+            <div>
+              <h4 class="font-display font-bold text-white text-sm">Dra. Paula Feliciano</h4>
+              <p class="text-[11px] text-[#E8C15A]">Especialista em Harmonização &amp; Rejuvenescimento</p>
+            </div>
+            <div class="bg-gradient-to-br from-[#2a2012] to-black border border-[#E8C15A]/50 rounded-xl px-2.5 py-1 text-center">
+              <span class="block text-[9px] text-[#E8C15A] uppercase font-black">CRBM</span>
+              <span class="text-xs font-mono font-bold text-white">38.291</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Protocols -->
+<section class="scroll-mt-24 space-y-6" id="protocolos">
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E8C15A]/25 pb-4">
+    <div>
+      <div class="flex items-center gap-2 text-xs uppercase tracking-widest font-black text-[#E8C15A]">
+        <span class="material-symbols-outlined text-base text-crimson-neon">workspace_premium</span>
+        BLACK FRIDAY PROTOCOLS
+      </div>
+      <h3 class="font-display text-2xl sm:text-3xl text-white font-black tracking-tight mt-1">
+        Escolha seu Protocolo VIP Oficial
+      </h3>
+      <p class="text-xs sm:text-sm text-white/60 mt-1">
+        Clique em um ou mais pacotes para pré-selecionar e vincular ao seu contrato digital.
+      </p>
+    </div>
+    <div class="flex items-center gap-1.5 bg-[#07090f] p-1.5 rounded-2xl border border-[#E8C15A]/30 self-start sm:self-auto overflow-x-auto max-w-full">
+      <button class="category-btn px-4 py-1.5 rounded-xl text-xs font-bold bg-[#E8C15A] text-black uppercase tracking-wider" id="filter-todos" onclick="filterCategory('todos')">Todos (6)</button>
+      <button class="category-btn px-4 py-1.5 rounded-xl text-xs font-bold text-white/60 hover:text-white uppercase tracking-wider" id="filter-facial" onclick="filterCategory('facial')">Facial</button>
+      <button class="category-btn px-4 py-1.5 rounded-xl text-xs font-bold text-white/60 hover:text-white uppercase tracking-wider" id="filter-corporal" onclick="filterCategory('corporal')">Corporal</button>
+      <button class="category-btn px-4 py-1.5 rounded-xl text-xs font-bold text-white/60 hover:text-white uppercase tracking-wider" id="filter-vip" onclick="filterCategory('vip')">VIP Premium</button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="protocols-grid">
+    <!-- Card 1 -->
+    <div class="diamond-card protocol-card cursor-pointer group relative flex flex-col justify-between rounded-3xl p-5" data-category="facial" data-id="1" data-installments="10x de R$ 98,00" data-name="Bioestimulador Facial (Radiesse/Sculptra)" data-price="799" onclick="selectProtocol(1)">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <span class="bg-gradient-to-r from-crimson-neon to-crimson-dark text-white px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">-47% OFF</span>
+          <span class="selected-pill hidden items-center gap-1 text-[11px] font-extrabold text-black bg-[#E8C15A] px-2.5 py-0.5 rounded-full shadow-md"><span class="material-symbols-outlined text-xs font-bold">check</span> SELECIONADO</span>
+          <span class="text-[11px] font-mono text-[#E8C15A]/80">01/06</span>
+        </div>
+        <div class="relative w-full h-44 rounded-2xl overflow-hidden bg-black border border-[#E8C15A]/30">
+          <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJCyJpwmrPqX-RWyqRShOlQt1PcOYHVpj2sSp0wPhEHXjbh8lnVERtETP2GX_rC8rB_9FUureCjZkp1LcaVg7491bq8GzrsM6wGZmJAw1Dx53RrPyKChLAsFRJzHD7-s19m5hbOOyeZyD3eCBaeiEe03oBHMnVzk99LzEApimCj5vxxGzkCJoVBDtot3ZsoUbJYCA2BhzXdyDoBjuaOCtP8rPm3q_ho5Ay-s1XCzED" alt="Bioestimulador Facial">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+          <div class="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-lg bg-black/80 text-[10px] font-bold text-[#E8C15A] border border-[#E8C15A]/30 flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">verified</span><span>Colágeno Padrão Ouro</span>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[#E8C15A]">spa</span><h4 class="font-display text-lg font-bold text-white group-hover:text-[#E8C15A] transition-colors">Bioestimulador Facial</h4></div>
+          <p class="text-xs text-[#E8C15A] font-medium mt-0.5">Radiesse / Sculptra Oficial</p>
+          <p class="text-[11px] text-white/60 mt-0.5">Indução potente de colágeno natural, atenuação de rugas e efeito lifting biológico duradouro.</p>
+        </div>
+        <div class="grid grid-cols-3 gap-1 py-2 px-1 rounded-2xl bg-black/60 border border-white/5">
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrC1-IuPLRGBZFGMUyn2l_x6o0oBwEo4xvxFOSr_h2ciMjuBgYBb74__R37wHQE9rS1bCAekOqhMgffl0XXXv1k9QfExvCat4rttPPBDGpvKizdfi0s0G4LLNTxy474GTOYkpLswUhPzaaqct-pl8jAPxkxbaPT4z9-CLaerbRK3kFbHvEKn9uQ_eUC5uPvVqV6-hDqzbEgrKKbkEmpoPJlQS-YUZpRo7uHMPZbhms8M" alt="Estimula colágeno"><span class="text-[10px] text-white/60 mt-1">Estimula colágeno</span></div>
+          <div class="flex flex-col items-center text-center px-1 border-x border-[#E8C15A]/20"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrBYx5SjukMJCmPMpUm09aOPHjN4St_K3ZMJ1FhjoL5ZEe5P8m0efJR5juPYZw_-49izUHzeFVHSSjnNrmGX9vhiJxOTDX2TdrjsiKVYthWA_0XCdLk81F2YOvkGvi6ciqD9QfoDVXJDBOVCWjLkzcf3RhHpnjmCfWQLfxVrwzKhc7yWmFOyQLKkIo0JVdH6jh0hMkX88RisRzsxXuI_r64w6MAaLfg6MRW1T6_NvPhS" alt="Efeito lifting"><span class="text-[10px] text-white/60 mt-1">Efeito lifting</span></div>
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrBGrc09SRh5LKmb1ism19kI5qS4-JCAHh3B6NuxJEwMKGAAWXbV1jk3tcnPh27OvPU6kwJ92GISl75Te3mFpi3BQiAz7K5XPJQj7HVlbuwtFq6Iu7hZHIcKmxkVIpwnXfjfeCZN73zCg9jmdkKWSMCpFhEV09GIbGHPxeyNNei4NV0NMKwhoOoVB5wn8s-0kwlM4cIxtoqGw4HfzevlkuuFVxDhfncNH-cq_PrSYQUU" alt="Rejuvenescimento"><span class="text-[10px] text-white/60 mt-1">Rejuvenescimento</span></div>
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 space-y-2">
+        <div class="bg-gradient-to-r from-[#1c160e] via-black to-[#1c160e] border border-[#E8C15A]/35 p-2.5 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-white/40 line-through font-mono">De: R$ 1.500,00</div>
+            <div class="flex items-baseline gap-1"><span class="text-xs text-emerald-400 font-semibold">Por: R$</span><span class="text-2xl font-black text-white font-mono">799</span><span class="text-[10px] text-emerald-400">à vista</span></div>
+          </div>
+          <div class="text-right border-l border-white/10 pl-2.5">
+            <div class="text-[10px] text-[#E8C15A] font-bold uppercase">Parcelamento</div>
+            <div class="text-xs text-white font-bold font-mono">10x R$ 98,00</div>
+            <div class="text-[9px] text-white/40">no cartão</div>
+          </div>
+        </div>
+        <button class="w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#10131e] hover:bg-[#E8C15A] hover:text-black text-[#E8C15A] border border-[#E8C15A]/50 transition-all select-btn">Selecionar Protocolo</button>
+      </div>
+    </div>
+
+    <!-- Card 2: Botox -->
+    <div class="diamond-card protocol-card cursor-pointer group relative flex flex-col justify-between rounded-3xl p-5 card-selected" data-category="facial" data-id="2" data-installments="10x de R$ 98,00" data-name="Botox — Harmonização Avançada" data-price="799" onclick="selectProtocol(2)">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <span class="bg-gradient-to-r from-crimson-neon to-crimson-dark text-white px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">-20% OFF</span>
+          <span class="selected-pill items-center gap-1 text-[11px] font-extrabold text-black bg-[#E8C15A] px-2.5 py-0.5 rounded-full shadow-md flex"><span class="material-symbols-outlined text-xs font-bold">check</span> SELECIONADO</span>
+          <span class="text-[11px] font-mono text-[#E8C15A]/80">02/06</span>
+        </div>
+        <div class="relative w-full h-44 rounded-2xl overflow-hidden bg-black border border-[#E8C15A]/30">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS58SWhNeru2BmzAnXimtV886gJ_HhDt20aj7FVMW7zIutvohrTYRnIy_wjt2K8TzaxMP9VTHW0yauBdpF9HRQHiHOLPZBptFhjjRnHu_XSlB1PzgVjr13DDSKCVYhu3utjM7O-UuXz4YYwakUAEGNnF8IutBO_Mdc_63LwQkqKXMbCaJUiCBax0i690tZg2UzN1SOQXG2uIPM1_dg8Rteo5065qdz5GM4c7kOzpv8" alt="Antes e Depois Botox" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[#E8C15A]">spa</span><h4 class="font-display text-lg font-bold text-white group-hover:text-[#E8C15A] transition-colors">Botox — Harmonização Avançada</h4></div>
+          <p class="text-xs text-[#E8C15A] font-medium mt-0.5">Testa sem marcas, expressão natural</p>
+          <p class="text-[11px] text-white/60 mt-0.5">Suaviza rugas dinâmicas e previne marcas de expressão mantendo o movimento natural e elegância do seu olhar.</p>
+        </div>
+        <div class="grid grid-cols-3 gap-1 py-2 px-1 rounded-2xl bg-black/60 border border-white/5">
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrC1-IuPLRGBZFGMUyn2l_x6o0oBwEo4xvxFOSr_h2ciMjuBgYBb74__R37wHQE9rS1bCAekOqhMgffl0XXXv1k9QfExvCat4rttPPBDGpvKizdfi0s0G4LLNTxy474GTOYkpLswUhPzaaqct-pl8jAPxkxbaPT4z9-CLaerbRK3kFbHvEKn9uQ_eUC5uPvVqV6-hDqzbEgrKKbkEmpoPJlQS-YUZpRo7uHMPZbhms8M" alt="Suaviza Rugas"><span class="text-[10px] text-white/60 mt-1">Suaviza rugas</span></div>
+          <div class="flex flex-col items-center text-center px-1 border-x border-[#E8C15A]/20"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrBYx5SjukMJCmPMpUm09aOPHjN4St_K3ZMJ1FhjoL5ZEe5P8m0efJR5juPYZw_-49izUHzeFVHSSjnNrmGX9vhiJxOTDX2TdrjsiKVYthWA_0XCdLk81F2YOvkGvi6ciqD9QfoDVXJDBOVCWjLkzcf3RhHpnjmCfWQLfxVrwzKhc7yWmFOyQLKkIo0JVdH6jh0hMkX88RisRzsxXuI_r64w6MAaLfg6MRW1T6_NvPhS" alt="Previne Marcas"><span class="text-[10px] text-white/60 mt-1">Previne marcas</span></div>
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrBGrc09SRh5LKmb1ism19kI5qS4-JCAHh3B6NuxJEwMKGAAWXbV1jk3tcnPh27OvPU6kwJ92GISl75Te3mFpi3BQiAz7K5XPJQj7HVlbuwtFq6Iu7hZHIcKmxkVIpwnXfjfeCZN73zCg9jmdkKWSMCpFhEV09GIbGHPxeyNNei4NV0NMKwhoOoVB5wn8s-0kwlM4cIxtoqGw4HfzevlkuuFVxDhfncNH-cq_PrSYQUU" alt="Resultado Natural"><span class="text-[10px] text-white/60 mt-1">Resultado natural</span></div>
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 space-y-2">
+        <div class="bg-gradient-to-r from-[#1c160e] via-black to-[#1c160e] border border-[#E8C15A]/35 p-2.5 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-white/40 line-through font-mono">De: R$ 999,00</div>
+            <div class="flex items-baseline gap-1"><span class="text-xs text-emerald-400 font-semibold">Por: R$</span><span class="text-2xl font-black text-white font-mono">799</span><span class="text-[10px] text-emerald-400">à vista</span></div>
+          </div>
+          <div class="text-right border-l border-white/10 pl-2.5">
+            <div class="text-[10px] text-[#E8C15A] font-bold uppercase">Parcelamento</div>
+            <div class="text-xs text-white font-bold font-mono">10x R$ 98,00</div>
+            <div class="text-[9px] text-white/40">no cartão</div>
+          </div>
+        </div>
+        <button class="w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#E8C15A] text-black border border-[#E8C15A] transition-all select-btn">Remover Seleção</button>
+      </div>
+    </div>
+
+    <!-- Card 3: Liporeductt -->
+    <div class="diamond-card protocol-card cursor-pointer group relative flex flex-col justify-between rounded-3xl p-5" data-category="corporal" data-id="3" data-installments="10x de R$ 96,98" data-name="Protocolo Liporeductt (16 sessões completas)" data-price="789" onclick="selectProtocol(3)">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <span class="bg-gradient-to-r from-crimson-neon to-crimson-dark text-white px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">-47% OFF</span>
+          <span class="selected-pill hidden items-center gap-1 text-[11px] font-extrabold text-black bg-[#E8C15A] px-2.5 py-0.5 rounded-full shadow-md"><span class="material-symbols-outlined text-xs font-bold">check</span> SELECIONADO</span>
+          <span class="text-[11px] font-mono text-[#E8C15A]/80">03/06</span>
+        </div>
+        <div class="relative w-full h-44 rounded-2xl overflow-hidden bg-black border border-[#E8C15A]/30">
+          <img alt="Antes e Depois Liporeductt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaO1g9GL6G0nIwcKmvZimD4lF-mVqCOVzE4w3f4wunJ0FAYaGuwq-oTlENjbtbF86MgANupfyjZWG2cl5oJEdQUItk-DZT1tWq5fXVdasS14l0Qx02x-Qm676fmmPxocLOb5z7GGx0n0l9P38N74BuAaAmmB6V8wxdB73bMc1gRYcDOelVRXeLqeQxf0F_LJw3PPFWAYKJN2wKcnDXBWrxAYKT6F0ftdbJVDGW60T1">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[#E8C15A]">auto_awesome</span><h4 class="font-display text-lg font-bold text-white group-hover:text-[#E8C15A] transition-colors">Protocolo Liporeductt</h4></div>
+          <p class="text-xs text-[#E8C15A] font-medium mt-0.5">Reduza medidas e modele seu corpo!</p>
+          <p class="text-[11px] text-white/60 mt-0.5">Tratamento intensivo de alta definição e redução de medidas (16 sessões).</p>
+        </div>
+        <div class="grid grid-cols-3 gap-1 py-2 px-1 rounded-2xl bg-black/60 border border-white/5">
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCE7H7-d_e7V2gUD1I5Ll_GejTURKUFPXxNakVhTEfkR6-BC2CMSDDaLcQB460_2c0YwHtidrRD0g0SghZiN0m3gK-vX5J2AYQb6xj9SMPOobC0Z1AqZ57qJygoExZMtwJErcTuq_Y2U4qTUJeFFu-VoG3WbORfGFPturlUVpLRlDQGVhnTt0HdnInCCnPLnXw8sU0NHOVKcvwW_C_1iOzUXxldim9g6TLVeLUteTyOnQ" alt="Reduz Gordura"><span class="text-[10px] text-white/60 mt-1">Reduz gordura</span></div>
+          <div class="flex flex-col items-center text-center px-1 border-x border-[#E8C15A]/20"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCzk4_0r1Vr7-conFyxLjPU9m9yHPvG1mK8__i-mB13lRk-TTORxOcmjb51r33OC0bMVq06yaylZ4hE0DRkJkw7wkcixocIrCFckIcNOv4O8epi3rLCPLIarFmo4Tkd6C-lAQ7TeZgzY_rln3Y8R2dNGxVcLghZRvbQYgH-5CvuV8nMOyAnw8njd8UmfjEzmFhKMJlsf0j7O7Qt-SaMCmqKufaUnTdb7SMi8jvgCNIu1A" alt="Modela Contorno"><span class="text-[10px] text-white/60 mt-1">Modela contorno</span></div>
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrAuWcCk2XjegQsChOoCCY1HaVRh2g6pzEj209pm03CKuV_iB1TDV1secDkdxydGnZMopyxe3eBOaInL0OzURngHQGACk2TqkrjVEA9AyEtl3mBXkBK9w1qBWp8GWLa4cK97VpYClHNUboG7D5i05ZOQ96vUCn_ASGLm7MrLhEyFi6c3DLvJewa0-x7yXbPCOJWmpYJo3v4MkV9NyoAYWNIFMgL_pz6eUBDhyGrHmRxImA" alt="Resultados Rápidos"><span class="text-[10px] text-white/60 mt-1">Resultados rápidos</span></div>
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 space-y-2">
+        <div class="bg-gradient-to-r from-[#1c160e] via-black to-[#1c160e] border border-[#E8C15A]/35 p-2.5 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-white/40 line-through font-mono">De R$ 1.499,00</div>
+            <div class="flex items-baseline gap-1"><span class="text-xs text-emerald-400 font-semibold">Por: R$</span><span class="text-2xl font-black text-white font-mono">789</span><span class="text-[10px] text-emerald-400">à vista</span></div>
+          </div>
+          <div class="text-right border-l border-white/10 pl-2.5">
+            <div class="text-[10px] text-[#E8C15A] font-bold uppercase">Parcelamento</div>
+            <div class="text-xs text-white font-bold font-mono">10x R$ 96,98</div>
+            <div class="text-[9px] text-white/40">no cartão</div>
+          </div>
+        </div>
+        <button class="w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#10131e] hover:bg-[#E8C15A] hover:text-black text-[#E8C15A] border border-[#E8C15A]/50 transition-all select-btn">Selecionar Protocolo</button>
+      </div>
+    </div>
+
+    <!-- Card 4: Criolipólise -->
+    <div class="diamond-card protocol-card cursor-pointer group relative flex flex-col justify-between rounded-3xl p-5" data-category="corporal" data-id="4" data-installments="10x de R$ 110,00" data-name="Harmonização Corporal com Criolipólise" data-price="899" onclick="selectProtocol(4)">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <span class="bg-gradient-to-r from-crimson-neon to-crimson-dark text-white px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">-75% OFF</span>
+          <span class="selected-pill hidden items-center gap-1 text-[11px] font-extrabold text-black bg-[#E8C15A] px-2.5 py-0.5 rounded-full shadow-md"><span class="material-symbols-outlined text-xs font-bold">check</span> SELECIONADO</span>
+          <span class="text-[11px] font-mono text-[#E8C15A]/80">04/06</span>
+        </div>
+        <div class="relative w-full h-44 rounded-2xl overflow-hidden bg-black border border-[#E8C15A]/30">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAm3EOdT1ayaIrATnGASlWzW80UJHAq_27vN0hNKOT5FKeEwY9DQbtEZacqAWwYmG3AaM_deVxTtX06O7IckadtPQKZ3WtiPsJ7QXKLdq0Wq8apKjzHr2Jt9TQOW3gIcWGOigiYu5-SGdMmF5p2LoRtbk7hCnxQzuMhoiUH8FvXQe3Ds1-Tz_Ni4HRI_CWttyNepxuY1K5mgIZIbE08q9pkT5AIjN8IyJhShI_NIZ7o" alt="Antes e Depois Criolipólise" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[#E8C15A]">ac_unit</span><h4 class="font-display text-lg font-bold text-white group-hover:text-[#E8C15A] transition-colors">Harmonização Corporal com Criolipólise</h4></div>
+          <p class="text-xs text-[#E8C15A] font-medium mt-0.5">Resfria, elimina gordura localizada e modela o contorno!</p>
+          <p class="text-[11px] text-white/60 mt-0.5">Eliminação definitiva de células adiposas através do congelamento controlado de alta performance.</p>
+        </div>
+        <div class="grid grid-cols-3 gap-1 py-2 px-1 rounded-2xl bg-black/60 border border-white/5">
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrClH-zWxRVMdI1CJsctU1JWIqWT-SaHm66KiJSaX42-PIsDQuHaVz4vcsySa-o_qWAfA3Xwx1SsEoOv8uWVIkTL6sbK8Ut6KRvexafGlnsPfVpY2CHMVTrafHecnsPyq8SxGIB9V5ppBN8-ucXDwb4Ifk0REtM_-MjIa0Zh9zrS3JXyvPZyUilamF6NAe1bPdPf4QPXQv1U7Xz0W4uaSTC6-qFIn2s1Qdwv_aYcekbRoQ" alt="Reduz gordura"><span class="text-[10px] text-white/60 mt-1">Reduz gordura</span></div>
+          <div class="flex flex-col items-center text-center px-1 border-x border-[#E8C15A]/20"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCzk4_0r1Vr7-conFyxLjPU9m9yHPvG1mK8__i-mB13lRk-TTORxOcmjb51r33OC0bMVq06yaylZ4hE0DRkJkw7wkcixocIrCFckIcNOv4O8epi3rLCPLIarFmo4Tkd6C-lAQ7TeZgzY_rln3Y8R2dNGxVcLghZRvbQYgH-5CvuV8nMOyAnw8njd8UmfjEzmFhKMJlsf0j7O7Qt-SaMCmqKufaUnTdb7SMi8jvgCNIu1A" alt="Modela contorno"><span class="text-[10px] text-white/60 mt-1">Modela contorno</span></div>
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrClH-zWxRVMdI1CJsctU1JWIqWT-SaHm66KiJSaX42-PIsDQuHaVz4vcsySa-o_qWAfA3Xwx1SsEoOv8uWVIkTL6sbK8Ut6KRvexafGlnsPfVpY2CHMVTrafHecnsPyq8SxGIB9V5ppBN8-ucXDwb4Ifk0REtM_-MjIa0Zh9zrS3JXyvPZyUilamF6NAe1bPdPf4QPXQv1U7Xz0W4uaSTC6-qFIn2s1Qdwv_aYcekbRoQ" alt="Resfria gordura"><span class="text-[10px] text-white/60 mt-1">Resfria gordura</span></div>
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 space-y-2">
+        <div class="bg-gradient-to-r from-[#1c160e] via-black to-[#1c160e] border border-[#E8C15A]/35 p-2.5 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-white/40 line-through font-mono">De: R$ 3.600,00</div>
+            <div class="flex items-baseline gap-1"><span class="text-xs text-emerald-400 font-semibold">Por: R$</span><span class="text-2xl font-black text-white font-mono">899</span><span class="text-[10px] text-emerald-400">à vista</span></div>
+          </div>
+          <div class="text-right border-l border-white/10 pl-2.5">
+            <div class="text-[10px] text-[#E8C15A] font-bold uppercase">Parcelamento</div>
+            <div class="text-xs text-white font-bold font-mono">10x R$ 110,00</div>
+            <div class="text-[9px] text-white/40">no cartão</div>
+          </div>
+        </div>
+        <button class="w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#10131e] hover:bg-[#E8C15A] hover:text-black text-[#E8C15A] border border-[#E8C15A]/50 transition-all select-btn">Selecionar Protocolo</button>
+      </div>
+    </div>
+
+    <!-- Card 5: Body Harmony -->
+    <div class="diamond-card protocol-card cursor-pointer group relative flex flex-col justify-between rounded-3xl p-5" data-category="vip" data-id="5" data-installments="10x de R$ 135,00" data-name="Body Harmony Exclusivo (5 sessões)" data-price="1099" onclick="selectProtocol(5)">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <span class="bg-gradient-to-r from-crimson-neon to-crimson-dark text-white px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">-39% OFF</span>
+          <span class="selected-pill hidden items-center gap-1 text-[11px] font-extrabold text-black bg-[#E8C15A] px-2.5 py-0.5 rounded-full shadow-md"><span class="material-symbols-outlined text-xs font-bold">check</span> SELECIONADO</span>
+          <span class="text-[11px] font-mono text-[#E8C15A]/80">05/06</span>
+        </div>
+        <div class="relative w-full h-44 rounded-2xl overflow-hidden bg-black border border-[#E8C15A]/30">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdo2HwY9XoRXk6xC6jt8VG1JNXguMuGhMTKO4PiZs16RosUFqjxot5b5vdrdves1a9h-zm5C92_M7qG4Ya_7EMq-alZE7go7TcfR2IpTZVMFw2jMt9iezCtcpkHsqj8KTCzZYHSvBrzWCYLTPXVEjUvjSDufAMu_o4TeeXIyKtDBQ2phr-iO_FHyC6uoxhPUldebsNbj0T0v7u5PTmMsPYMr2QNSAJ8nCwChCuWUZ1" alt="Antes e Depois Body Harmony" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+        </div>
+        <div>
+          <div class="flex items-center justify-between gap-1.5">
+            <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[#E8C15A]">spa</span><h4 class="font-display text-lg font-bold text-white group-hover:text-[#E8C15A] transition-colors">Body Harmony</h4></div>
+            <span class="bg-black text-[#E8C15A] border border-[#E8C15A]/40 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider">5 SESSÕES</span>
+          </div>
+          <p class="text-xs text-[#E8C15A] font-medium mt-0.5">Tonifique seu corpo, conquiste seus resultados!</p>
+          <p class="text-[11px] text-white/60 mt-0.5">Sinergia completa de remodelamento corporal, estimulação de tônus muscular e metabolismo.</p>
+        </div>
+        <div class="grid grid-cols-3 gap-1 py-2 px-1 rounded-2xl bg-black/60 border border-white/5">
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCE7H7-d_e7V2gUD1I5Ll_GejTURKUFPXxNakVhTEfkR6-BC2CMSDDaLcQB460_2c0YwHtidrRD0g0SghZiN0m3gK-vX5J2AYQb6xj9SMPOobC0Z1AqZ57qJygoExZMtwJErcTuq_Y2U4qTUJeFFu-VoG3WbORfGFPturlUVpLRlDQGVhnTt0HdnInCCnPLnXw8sU0NHOVKcvwW_C_1iOzUXxldim9g6TLVeLUteTyOnQ" alt="Reduz gordura"><span class="text-[10px] text-white/60 mt-1">Reduz gordura</span></div>
+          <div class="flex flex-col items-center text-center px-1 border-x border-[#E8C15A]/20"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCzk4_0r1Vr7-conFyxLjPU9m9yHPvG1mK8__i-mB13lRk-TTORxOcmjb51r33OC0bMVq06yaylZ4hE0DRkJkw7wkcixocIrCFckIcNOv4O8epi3rLCPLIarFmo4Tkd6C-lAQ7TeZgzY_rln3Y8R2dNGxVcLghZRvbQYgH-5CvuV8nMOyAnw8njd8UmfjEzmFhKMJlsf0j7O7Qt-SaMCmqKufaUnTdb7SMi8jvgCNIu1A" alt="Modela contorno"><span class="text-[10px] text-white/60 mt-1">Modela contorno</span></div>
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrC4IuZDwnOEpLpQ-Se9sjEMTMkO5PJgaALJi_O3pNXes2CD2M1gBB22nx4g9SVQaTQYwHOGxRRgGg4ThXjLu_7WiFpOSEtVx89b7dP28HNCMWTU6HfNuvY2K4qSU6nzHkyqXVw5ZEPYGDNUBYKBQ2fldLFNUN7InM0hkrEWnr7ZTmMwQbKxds_KWiSyVJaC2jB8tB6Ekh0FRtGRz7jgNVydw5JuD1LliKYmWjc2PmEv" alt="Estimula metabolismo"><span class="text-[10px] text-white/60 mt-1">Estimula metabolismo</span></div>
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 space-y-2">
+        <div class="bg-gradient-to-r from-[#1c160e] via-black to-[#1c160e] border border-[#E8C15A]/35 p-2.5 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-white/40 line-through font-mono">De: R$ 1.800,00</div>
+            <div class="flex items-baseline gap-1"><span class="text-xs text-emerald-400 font-semibold">Por: R$</span><span class="text-2xl font-black text-white font-mono">1.099</span><span class="text-[10px] text-emerald-400">à vista</span></div>
+          </div>
+          <div class="text-right border-l border-white/10 pl-2.5">
+            <div class="text-[10px] text-[#E8C15A] font-bold uppercase">Parcelamento</div>
+            <div class="text-xs text-white font-bold font-mono">10x R$ 135,00</div>
+            <div class="text-[9px] text-white/40">no cartão</div>
+          </div>
+        </div>
+        <button class="w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#10131e] hover:bg-[#E8C15A] hover:text-black text-[#E8C15A] border border-[#E8C15A]/50 transition-all select-btn">Selecionar Protocolo</button>
+      </div>
+    </div>
+
+    <!-- Card 6: Harmonização Glútea -->
+    <div class="diamond-card protocol-card cursor-pointer group relative flex flex-col justify-between rounded-3xl p-5 card-selected" data-category="vip" data-id="6" data-installments="10x de R$ 245,00" data-name="Harmonização Glútea (Bioestimulador &amp; Subincisão)" data-price="1999" onclick="selectProtocol(6)">
+      <div class="space-y-3">
+        <div class="flex items-center justify-between gap-2">
+          <span class="bg-gradient-to-r from-crimson-neon to-crimson-dark text-white px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-md">-47% OFF</span>
+          <span class="selected-pill items-center gap-1 text-[11px] font-extrabold text-black bg-[#E8C15A] px-2.5 py-0.5 rounded-full shadow-md flex"><span class="material-symbols-outlined text-xs font-bold">check</span> SELECIONADO</span>
+          <span class="text-[11px] font-mono text-[#E8C15A]/80">06/06</span>
+        </div>
+        <div class="relative w-full h-52 rounded-2xl overflow-hidden bg-black border border-[#E8C15A]/30">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuANWPqzrKGlgcaVtn9I0t61kd2euB3TohSl5fwYFla8eZKYDleIwW47H__JCH7NVtvTUhzW9hgN-TKEyeJYNWjjC-Jm7zPKjOvSHkil0DQ1hg1jLBX3nrcromwweEdadRBZOgL1CQ7RmbjCSJdRr47IsjAgZXJfuPljm_a637QmoVljHZM4yMMtD-UKCKMh9ocPijFZSFvZU0NwaxywquFQy_UP6VvQQBN60VuM2sVE" alt="Antes e Depois Harmonização Glútea" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[#E8C15A]">spa</span><h4 class="font-display text-lg font-bold text-white group-hover:text-[#E8C15A] transition-colors">Harmonização Glútea</h4></div>
+          <p class="text-xs text-[#E8C15A] font-medium mt-0.5">com Bioestimulador de Colágeno e Subincisão de Celulite</p>
+          <p class="text-[11px] text-white/60 mt-0.5">Tratamento padrão ouro de volumização, melhora expressiva da flacidez e remodelamento do contorno.</p>
+        </div>
+        <div class="grid grid-cols-3 gap-1 py-2 px-1 rounded-2xl bg-black/60 border border-white/5">
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrBSJO2Nwge5hC23NURmTp-xfxWgKFHfYgwat6NFOElscvBIiRagf4h-mOsQzRD8CG3-dWevmhxF8cijuiBS-06Xm3fITvH3MnrFue33M795SD-PsqBpbCJyBlNNycxWh0Z7GtZFb6wu_6dZWWyG6GXSMK-WunE5kWe4kA6RhwVVHiEwOts55jCcd4ZFfZPhNp54kK-CsOKh7zhNGVpJq07ID7Dy6q2c1hDOchjbg6lbkA" alt="Redução da celulite"><span class="text-[10px] text-white/60 mt-1">Redução da celulite</span></div>
+          <div class="flex flex-col items-center text-center px-1 border-x border-[#E8C15A]/20"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCc9s-etTPAgE57CMRaguvlayGEQGY1D4rbdNIl9-Sq9sfDNJmlIZhZl42P9cg32I3qgUkjszFqMCu223ZmnDYoq5bOmiXjHrLc1jQcmoKBhvRhopuG14iCLx9TxN7LAEWsWO2OGYdVx1C6iWjLQVFs7TemKjYZn1AVthixNW1Yffohi8lbnHuYZtRGnhs58QykyDbH1YNSN23xot1SQu416UAGh0yBiW4aceE3lRIC" alt="Mais firmeza"><span class="text-[10px] text-white/60 mt-1">Mais firmeza</span></div>
+          <div class="flex flex-col items-center text-center px-1"><img class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrAIT4C_PsXEb3JUKHQV4fIZhljPU4prYCQqiWu2Xeu6gyLbWjluUg03T89CTw-1bmp5RpsASx9B1IjgkdHUiN3hQ52THporfu_GHVH_en7ZVG8ir3Vj3rppHdQ9g6ENrvaxS6js_T9JSzbYj-BIDBOSBOHH26SCR95VSM0O8xn5V9Q8nY6qvwkRxb0ofhgJW2jyT6BtFDsXCdC0niAzgZRQhiBc2CVIPXNjyxdKkvG2MA" alt="Melhor contorno"><span class="text-[10px] text-white/60 mt-1">Melhor contorno</span></div>
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 space-y-2">
+        <div class="bg-gradient-to-r from-[#1c160e] via-black to-[#1c160e] border border-[#E8C15A]/35 p-2.5 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-white/40 line-through font-mono">De: R$ 3.700,00</div>
+            <div class="flex items-baseline gap-1"><span class="text-xs text-emerald-400 font-semibold">Por: R$</span><span class="text-2xl font-black text-white font-mono">1.999</span><span class="text-[10px] text-emerald-400">à vista</span></div>
+          </div>
+          <div class="text-right border-l border-white/10 pl-2.5">
+            <div class="text-[10px] text-[#E8C15A] font-bold uppercase">Parcelamento</div>
+            <div class="text-xs text-white font-bold font-mono">10x R$ 245,00</div>
+            <div class="text-[9px] text-white/40">no cartão</div>
+          </div>
+        </div>
+        <button class="w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#E8C15A] text-black border border-[#E8C15A] transition-all select-btn">Remover Seleção</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Box -->
+  <div class="p-5 rounded-3xl bg-black border-2 border-[#E8C15A]/40 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl" id="selection-summary-bar">
+    <div class="flex items-center gap-3.5">
+      <div class="w-12 h-12 rounded-2xl bg-[#E8C15A]/15 border border-[#E8C15A]/40 flex items-center justify-center text-[#E8C15A]">
+        <span class="material-symbols-outlined text-2xl">shopping_bag</span>
+      </div>
+      <div>
+        <div class="text-xs text-white/60 uppercase font-semibold">Protocolos Selecionados:</div>
+        <div class="text-sm font-black text-white" id="selected-count-label">1 protocolo(s): Botox — Harmonização Avançada</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="text-right">
+        <div class="text-[11px] text-white/60 font-mono">Valor Total Pix:</div>
+        <div class="text-xl font-black text-emerald-400 font-mono" id="selected-total-label">R$ 799,00</div>
+      </div>
+      <a class="gold-foil-bg text-black px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider hover:brightness-110 flex items-center gap-1.5 shadow-md" href="#assinatura">
+        <span>Avançar para Contrato</span>
+        <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Contract & Legal Signature -->
+<section class="scroll-mt-24 space-y-6" id="assinatura">
+  <div class="border-b border-[#E8C15A]/25 pb-3">
+    <div class="flex items-center gap-2 text-xs uppercase tracking-widest font-black text-[#E8C15A]">
+      <span class="material-symbols-outlined text-base text-crimson-neon">verified_user</span>
+      FORMALIZAÇÃO DIGITAL JURÍDICA
+    </div>
+    <h3 class="font-display text-2xl sm:text-3xl text-white font-black tracking-tight mt-1">
+      Emissão &amp; Assinatura do Contrato Black Friday 2026
+    </h3>
+    <p class="text-xs sm:text-sm text-white/60 mt-1">
+      Preencha seus dados para vincular o benefício à sua titularidade conforme termos contratuais de vigência em 2026.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="lg:col-span-7 space-y-6">
+      <div class="bg-black/90 border border-[#E8C15A]/35 rounded-3xl p-6 space-y-4 shadow-2xl">
+        <h4 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+          <span class="material-symbols-outlined text-[#E8C15A] text-base">person</span>
+          Dados da Contratante / Beneficiária
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="relative sm:col-span-2">
+            <input class="w-full rounded-xl bg-[#090b12] border border-[#E8C15A]/30 px-3.5 pt-5 pb-2 text-sm text-white focus:border-[#E8C15A] focus:outline-none font-medium" id="form-name" type="text" value="Mariana Silveira de Albuquerque">
+            <label class="absolute left-3.5 top-1.5 text-[11px] text-[#E8C15A]" for="form-name">Nome Completo da Paciente *</label>
+          </div>
+          <div class="relative">
+            <input class="w-full rounded-xl bg-[#090b12] border border-[#E8C15A]/30 px-3.5 pt-5 pb-2 text-sm text-white focus:border-[#E8C15A] focus:outline-none font-mono" id="form-cpf" maxlength="14" oninput="formatCPF(this)" type="text" value="342.891.708-25">
+            <label class="absolute left-3.5 top-1.5 text-[11px] text-[#E8C15A]" for="form-cpf">CPF (Vínculo Jurídico) *</label>
+          </div>
+          <div class="relative">
+            <input class="w-full rounded-xl bg-[#090b12] border border-[#E8C15A]/30 px-3.5 pt-5 pb-2 text-sm text-white focus:border-[#E8C15A] focus:outline-none font-mono" id="form-phone" maxlength="15" oninput="formatPhone(this)" type="tel" value="(11) 98765-4321">
+            <label class="absolute left-3.5 top-1.5 text-[11px] text-[#E8C15A]" for="form-phone">WhatsApp com DDD *</label>
+          </div>
+          <div class="relative sm:col-span-2">
+            <input class="w-full rounded-xl bg-[#090b12] border border-[#E8C15A]/30 px-3.5 pt-5 pb-2 text-sm text-white focus:border-[#E8C15A] focus:outline-none" id="form-email" type="email" value="mariana.albuquerque@email.com">
+            <label class="absolute left-3.5 top-1.5 text-[11px] text-[#E8C15A]" for="form-email">E-mail para Recebimento da Minuta *</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-black/90 border border-[#E8C15A]/35 rounded-3xl p-6 space-y-3.5 shadow-2xl">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#E8C15A] text-base">gavel</span>
+            Termo de Prestação de Serviços &amp; Vigência 2026
+          </h4>
+          <span class="text-[10px] text-[#E8C15A] bg-[#211a0f] px-2.5 py-0.5 rounded-full border border-[#E8C15A]/40 font-mono font-bold">Minuta Oficial v2.6</span>
+        </div>
+        <div class="h-44 overflow-y-auto pr-2 text-xs text-white/60 leading-relaxed space-y-3 bg-[#05060a] p-4 rounded-2xl border border-white/5 font-mono">
+          <p class="font-bold text-white tracking-wide">INSTRUMENTO PARTICULAR DE PRESTAÇÃO DE SERVIÇOS BIOMÉDICOS ESTÉTICOS — BLACK FRIDAY VIP 2026</p>
+          <p><strong class="text-[#E8C15A]">CLÁUSULA 1ª — DA VIGÊNCIA OBRIGATÓRIA NO ANO DE 2026:</strong> O(s) protocolo(s) contratado(s) com as condições promocionais de Black Friday possuem realização estritamente vinculada ao calendário do ano corrente de 2026, com término improrrogável em 20 de dezembro de 2026. A não realização das sessões dentro deste período sem justificativa formal médica acarretará a perda da condição especial.</p>
+          <p><strong class="text-[#E8C15A]">CLÁUSULA 2ª — DO AGENDAMENTO E REMARCAÇÕES:</strong> As sessões devem ser agendadas previamente com o concierge da clínica. Remarcações ou cancelamentos de horários já reservados deverão ser formalizados com antecedência mínima de 24 (vinte e quatro) horas úteis, sob pena de cômputo da sessão agendada.</p>
+          <p><strong class="text-[#E8C15A]">CLÁUSULA 3ª — DA INDIVIDUALIDADE E AVALIAÇÃO BIOMÉDICA:</strong> A execução dos procedimentos está condicionada à prévia anamnese clínica biomédica com a Dra. Paula Feliciano (CRBM/SP 38.291). Caso haja contraindicação médica absoluta formal, o valor integral será estornado ou convertido em créditos de tratamentos viáveis.</p>
+          <p><strong class="text-[#E8C15A]">CLÁUSULA 4ª — DA VALIDADE DA ASSINATURA ELETRÔNICA:</strong> As partes reconhecem a plena validade jurídica deste contrato assinado digitalmente, nos moldes do art. 10, § 2º, da Medida Provisória nº 2.200-2/2001 e da Lei nº 14.063/2020.</p>
+        </div>
+        <label class="flex items-start gap-2.5 pt-1 cursor-pointer select-none">
+          <input class="mt-0.5 rounded border-[#E8C15A]/50 bg-black text-crimson-neon focus:ring-crimson-neon h-4 w-4" id="contract-agree" type="checkbox" checked="checked">
+          <span class="text-xs text-white/80 leading-tight">Li, compreendi e concordo integralmente com os termos do contrato, aceitando a realização mandatória dos procedimentos durante o ano de 2026.</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Signature Pad -->
+    <div class="lg:col-span-5 space-y-6">
+      <div class="bg-black/90 border border-[#E8C15A]/35 rounded-3xl p-6 space-y-4 shadow-2xl relative">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+            <span class="material-symbols-outlined text-[#E8C15A] text-base">draw</span>
+            Assinatura do Titular
+          </h4>
+          <button class="text-[11px] text-[#E8C15A] hover:underline flex items-center gap-1 font-bold uppercase" onclick="clearSignature()" type="button">
+            <span class="material-symbols-outlined text-xs">restart_alt</span> Limpar
+          </button>
+        </div>
+
+        <div class="relative rounded-2xl overflow-hidden bg-[#05060b] border-2 border-dashed border-[#E8C15A]/60">
+          <canvas class="w-full h-44 cursor-crosshair block" id="signature-pad" width="312" height="176"></canvas>
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none p-4">
+            <svg class="w-full h-full max-h-36 drop-shadow" viewBox="0 0 460 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M38 95 C 45 40, 68 20, 82 25 C 95 30, 88 85, 78 105 C 72 118, 64 122, 60 115 C 55 106, 75 70, 102 75 C 120 78, 125 102, 138 96 C 150 90, 155 72, 168 74 C 182 76, 185 96, 198 94 C 210 92, 218 68, 230 70 C 242 72, 245 92, 260 88 C 272 85, 278 65, 292 68 C 305 70, 310 92, 325 90 C 340 88, 355 58, 370 60 C 385 62, 395 86, 420 84" stroke="#E8C15A" stroke-width="3.2" stroke-linecap="round"></path>
+              <path d="M85 70 Q 230 45 425 78" stroke="#FF003C" stroke-width="2.2" opacity="0.85"></path>
+            </svg>
+          </div>
+          <div class="absolute bottom-8 left-6 right-6 border-b border-[#E8C15A]/30 pointer-events-none flex justify-between">
+            <span class="text-[9px] uppercase tracking-widest text-[#E8C15A]/40 font-mono">Assine na linha acima</span>
+            <span class="text-[9px] text-[#E8C15A]/40 font-mono">X _________________</span>
+          </div>
+          <div class="absolute top-2 right-2 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/90 text-emerald-300 flex items-center gap-1.5 border border-emerald-500/40" id="sig-status">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Assinatura Válida
+          </div>
+        </div>
+
+        <div class="rounded-2xl bg-black border border-[#E8C15A]/30 p-4 space-y-2.5">
+          <div class="flex items-center justify-between text-xs pb-1.5 border-b border-white/5">
+            <div class="flex items-center gap-1.5 text-emerald-400 font-bold">
+              <span class="material-symbols-outlined text-sm">enhanced_encryption</span>
+              <span>OpenSign Forensic SHA-256</span>
+            </div>
+            <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40 font-mono font-bold">ICP-BRASIL VERIFICADO</span>
+          </div>
+          <div class="font-mono text-[10px] text-white/70 break-all bg-[#08090f] p-3 rounded-xl border border-white/5 space-y-1.5">
+            <div><span class="text-[#E8C15A] font-semibold">HASH SHA-256:</span> <span id="crypto-hash" class="text-white font-mono">a7f9c2e481b0d56e3a9c72e4fa10d984b237ce8104f9812bbec32910fa89c02d</span></div>
+            <div class="flex flex-wrap items-center justify-between gap-1 text-[9px] text-white/50 pt-1 border-t border-white/5">
+              <span>TIMESTAMP: 2026-11-13 16:45:12.894 UTC-3</span>
+              <span>IP PROOF: 189.121.74.88 (SSL 256-bit)</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="w-full py-4 px-6 rounded-2xl font-black text-sm uppercase tracking-wider gold-foil-bg text-black transition-all transform hover:scale-[1.01] active:scale-98 flex items-center justify-center gap-2 shadow-lg" onclick="submitContract()" type="button">
+          <span class="material-symbols-outlined text-xl text-crimson-dark">assignment_turned_in</span>
+          Finalizar &amp; Assinar Contrato Digital
+        </button>
+        <button class="w-full py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 transition-colors flex items-center justify-center gap-1.5" onclick="submitContract()" type="button">
+          <span class="material-symbols-outlined text-base">visibility</span>
+          <span>Ver Modal de Confirmação &amp; Minuta Assinada</span>
+        </button>
+        <p class="text-center text-[11px] text-white/50">Garantia de segurança biomédica e reserva expressa de lote Black Friday 2026.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl hidden" id="confirmation-modal">
+  <div class="relative w-full max-w-lg rounded-3xl bg-gradient-to-b from-[#141524] to-black border-2 border-[#E8C15A] p-7 shadow-[0_0_50px_rgba(232,193,90,0.35)] space-y-5 animate-in fade-in zoom-in-95">
+    <button class="absolute top-4 right-4 text-white/60 hover:text-white" onclick="closeModal()">
+      <span class="material-symbols-outlined text-xl">close</span>
+    </button>
+    <div class="flex items-center gap-3.5">
+      <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 shadow-lg">
+        <span class="material-symbols-outlined text-2xl">task_alt</span>
+      </div>
+      <div>
+        <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400">Sucesso na Assinatura</span>
+        <h4 class="font-display text-xl text-white font-black tracking-wide">Contrato VIP Registrado!</h4>
+      </div>
+    </div>
+    <div class="bg-black/70 p-4 rounded-2xl border border-white/10 space-y-2.5 text-xs">
+      <div class="flex justify-between border-b border-white/5 pb-2">
+        <span class="text-white/60">Titular do Contrato:</span>
+        <span class="font-bold text-white uppercase" id="modal-patient-name">Mariana Silveira de Albuquerque</span>
+      </div>
+      <div class="flex justify-between border-b border-white/5 pb-2">
+        <span class="text-white/60">CPF Vinculado:</span>
+        <span class="font-mono text-white" id="modal-patient-cpf">342.891.708-25</span>
+      </div>
+      <div class="flex justify-between border-b border-white/5 pb-2">
+        <span class="text-white/60">Protocolo(s) Garantido(s):</span>
+        <span class="font-bold text-[#E8C15A] text-right max-w-[220px] truncate" id="modal-patient-protocols">Harmonização Glútea VIP (Bioestimulador &amp; Subincisão)</span>
+      </div>
+      <div class="flex justify-between pt-1">
+        <span class="text-white/60">Vigência de Realização:</span>
+        <span class="font-bold text-amber-300">Ano de 2026 (Obrigatório)</span>
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3 pt-1">
+      <a class="flex-1 py-3.5 px-4 rounded-xl font-black text-xs uppercase tracking-wider bg-[#10B981] hover:bg-emerald-600 text-white flex items-center justify-center gap-1.5 shadow-lg" href="#" id="modal-whatsapp-link" target="_blank">
+        <span class="material-symbols-outlined text-base">chat</span>
+        Confirmar no WhatsApp
+      </a>
+      <button class="py-3.5 px-4 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-[#0e121d] hover:bg-[#161d2e] border border-[#E8C15A]/50 flex items-center justify-center gap-1.5" onclick="downloadContractMock()" type="button">
+        <span class="material-symbols-outlined text-base text-[#E8C15A]">download</span>
+        Baixar PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 inset-x-0 z-40 bg-black/95 backdrop-blur-2xl border-t border-[#E8C15A]/30 px-6 py-2.5">
+  <div class="max-w-md mx-auto flex items-center justify-around gap-2">
+    <a class="flex flex-col items-center justify-center gap-1 text-[#E8C15A] py-1 px-3" href="#protocolos">
+      <span class="material-symbols-outlined text-xl">auto_awesome</span>
+      <p class="text-[11px] font-black tracking-wider uppercase">Protocolos</p>
+    </a>
+    <a class="flex flex-col items-center justify-center gap-1 text-white/60 hover:text-[#E8C15A] py-1 px-3" href="#assinatura">
+      <span class="material-symbols-outlined text-xl">edit_document</span>
+      <p class="text-[11px] font-bold tracking-wider uppercase">Contrato</p>
+    </a>
+    <a class="flex flex-col items-center justify-center gap-1 text-emerald-400 hover:text-emerald-300 py-1 px-3" href="https://wa.me/5511999999999" target="_blank">
+      <span class="material-symbols-outlined text-xl">chat</span>
+      <p class="text-[11px] font-bold tracking-wider uppercase">WhatsApp</p>
+    </a>
+  </div>
+</nav>
+
+<!-- Footer -->
+<footer class="mt-16 border-t border-[#E8C15A]/25 bg-black text-white/60 text-xs py-12 px-4">
+  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="space-y-3">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[#E8C15A]">spa</span>
+        <span class="font-display text-sm font-black text-white uppercase tracking-wider">Dra. Paula Feliciano</span>
+      </div>
+      <p class="leading-relaxed">Biomedicina Estética de Alta Performance com base em evidências científicas, harmonização elegante, segurança clínica e ética profissional.</p>
+      <p class="text-[11px] text-[#E8C15A] font-mono">CRBM/SP: 38.291 • Responsabilidade Técnica Biomédica</p>
+    </div>
+    <div class="space-y-2">
+      <h5 class="text-white font-bold uppercase tracking-wider text-xs">Atendimento &amp; Concierge</h5>
+      <p class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-[#E8C15A]">schedule</span> Segunda a Sexta: 08h00 às 20h00 | Sábado: 09h00 às 15h00</p>
+      <p class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-[#E8C15A]">location_on</span> Av. Brigadeiro Faria Lima, 2800 — Itaim Bibi, São Paulo - SP</p>
+      <p class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-[#E8C15A]">mail</span> contato@drapaulafeliciano.com.br</p>
+    </div>
+    <div class="space-y-2">
+      <h5 class="text-white font-bold uppercase tracking-wider text-xs">Regras da Campanha 2026</h5>
+      <p class="leading-relaxed text-[11px]">Campanha válida por tempo determinado ou até o esgotamento dos 6 lotes VIPs oficiais. Realização dos protocolos obrigatória no ano de 2026.</p>
+      <p class="text-[10px] text-white/40 pt-2 border-t border-white/5">© 2026 Dra. Paula Feliciano Estética Avançada. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+    const selectedProtocols = new Map();
+    selectedProtocols.set(2, { name: "Botox — Harmonização Avançada", price: 799 });
+    let isDrawing = false;
+    let signaturePoints = 25;
+
+    function startCountdown() {
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() + 3);
+      targetDate.setHours(targetDate.getHours() + 14);
+
+      function update() {
+        const now = new Date();
+        const diff = Math.max(0, targetDate - now);
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / 1000 / 60) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        const dStr = String(days).padStart(2, '0');
+        const hStr = String(hours).padStart(2, '0');
+        const mStr = String(minutes).padStart(2, '0');
+        const sStr = String(seconds).padStart(2, '0');
+
+        const dEl = document.getElementById('timer-days');
+        const hEl = document.getElementById('timer-hours');
+        const mEl = document.getElementById('timer-minutes');
+        const sEl = document.getElementById('timer-seconds');
+        const topEl = document.getElementById('top-timer');
+
+        if (dEl) dEl.textContent = dStr;
+        if (hEl) hEl.textContent = hStr;
+        if (mEl) mEl.textContent = mStr;
+        if (sEl) sEl.textContent = sStr;
+        if (topEl) topEl.textContent = `Expira em ${dStr}d : ${hStr}h : ${mStr}m : ${sStr}s`;
+      }
+      update();
+      setInterval(update, 1000);
+    }
+    startCountdown();
+
+    function filterCategory(category) {
+      const buttons = document.querySelectorAll('.category-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-[#E8C15A]', 'text-black');
+        btn.classList.add('text-white/60');
+      });
+      const activeBtn = document.getElementById(`filter-${category}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-white/60');
+        activeBtn.classList.add('bg-[#E8C15A]', 'text-black');
+      }
+
+      const cards = document.querySelectorAll('.protocol-card');
+      cards.forEach(card => {
+        const cardCat = card.getAttribute('data-category');
+        if (category === 'todos' || cardCat === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function selectProtocol(id) {
+      const card = document.querySelector(`.protocol-card[data-id="${id}"]`);
+      if (!card) return;
+      const name = card.getAttribute('data-name');
+      const price = parseFloat(card.getAttribute('data-price'));
+      const pill = card.querySelector('.selected-pill');
+      const btn = card.querySelector('.select-btn');
+
+      if (selectedProtocols.has(id)) {
+        selectedProtocols.delete(id);
+        card.classList.remove('card-selected');
+        if (pill) { pill.classList.add('hidden'); pill.classList.remove('flex'); }
+        if (btn) { btn.textContent = 'Selecionar Protocolo'; btn.className = 'w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#10131e] hover:bg-[#E8C15A] hover:text-black text-[#E8C15A] border border-[#E8C15A]/50 transition-all select-btn'; }
+      } else {
+        selectedProtocols.set(id, { name, price });
+        card.classList.add('card-selected');
+        if (pill) { pill.classList.remove('hidden'); pill.classList.add('flex'); }
+        if (btn) { btn.textContent = 'Remover Seleção'; btn.className = 'w-full py-2.5 px-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#E8C15A] text-black border border-[#E8C15A] transition-all select-btn'; }
+      }
+      updateSelectionSummary();
+    }
+
+    function updateSelectionSummary() {
+      const count = selectedProtocols.size;
+      const countLabel = document.getElementById('selected-count-label');
+      const totalLabel = document.getElementById('selected-total-label');
+      let total = 0;
+      const names = [];
+      selectedProtocols.forEach(item => {
+        total += item.price;
+        names.push(item.name);
+      });
+
+      if (count === 0) {
+        countLabel.textContent = 'Nenhum selecionado ainda (clique acima)';
+        totalLabel.textContent = 'R$ 0,00';
+      } else {
+        countLabel.textContent = `${count} protocolo(s): ${names.join(', ')}`;
+        totalLabel.textContent = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+      }
+    }
+
+    // Canvas pad
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#E8C15A';
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 200);
+
+    function startSign(e) {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      ctx.beginPath();
+      ctx.moveTo(clientX - rect.left, clientY - rect.top);
+      signaturePoints++;
+    }
+    function drawSign(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      ctx.lineTo(clientX - rect.left, clientY - rect.top);
+      ctx.stroke();
+      signaturePoints++;
+    }
+    function stopSign() { isDrawing = false; }
+
+    canvas.addEventListener('mousedown', startSign);
+    canvas.addEventListener('mousemove', drawSign);
+    window.addEventListener('mouseup', stopSign);
+    canvas.addEventListener('touchstart', startSign, { passive: false });
+    canvas.addEventListener('touchmove', drawSign, { passive: false });
+    window.addEventListener('touchend', stopSign);
+
+    function clearSignature() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      signaturePoints = 0;
+    }
+
+    function formatCPF(input) {
+      let v = input.value.replace(/\D/g, "");
+      v = v.replace(/(\d{3})(\d)/, "$1.$2");
+      v = v.replace(/(\d{3})(\d)/, "$1.$2");
+      v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      input.value = v;
+    }
+    function formatPhone(input) {
+      let v = input.value.replace(/\D/g, "");
+      v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+      v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+      input.value = v;
+    }
+
+    function submitContract() {
+      const name = document.getElementById('form-name').value.trim();
+      const cpf = document.getElementById('form-cpf').value.trim();
+      document.getElementById('modal-patient-name').textContent = name;
+      document.getElementById('modal-patient-cpf').textContent = cpf;
+      const protocolNames = [];
+      selectedProtocols.forEach(p => protocolNames.push(p.name));
+      document.getElementById('modal-patient-protocols').textContent = protocolNames.join(', ');
+      document.getElementById('confirmation-modal').classList.remove('hidden');
+    }
+    function closeModal() { document.getElementById('confirmation-modal').classList.add('hidden'); }
+    function downloadContractMock() { alert('Contrato compilado em PDF com certificação forense OpenSign SHA-256.'); }
+</script>
+</body></html>
